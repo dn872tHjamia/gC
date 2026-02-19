@@ -46,7 +46,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const password = passwordField.value;
 
     try {
-        const response = await fetch('postgresql://admin:egVeuCRWarlFYiK4vpnicatgIouYTUH4@dpg-d6bhpcpr0fns73e1qr0g-a/citas_db_u5yx', {
+        const response = await fetch('postgresql://citas_db_sq82_user:e1OupKLEhR1isHn5gezXyeXmEFzhEJfv@dpg-d6bi2tgboq4c73fls42g-a/citas_db_sq82', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
