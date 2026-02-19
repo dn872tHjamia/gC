@@ -8,7 +8,8 @@ app.use(cors());
 
 // CONEXIÓN USANDO TU URL INTERNA
 const pool = new Pool({
-    connectionString: 'postgresql://citas_db_sq82_user:e1OupKLEhR1isHn5gezXyeXmEFzhEJfv@dpg-d6bi2tgboq4c73fls42g-a/citas_db_sq82',
+    // Esto lee automáticamente la DATABASE_URL que pusiste en Render
+    connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 });
 
