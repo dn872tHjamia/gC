@@ -74,11 +74,13 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     };
 
     try {
-        const res = await fetch('postgresql://admin:egVeuCRWarlFYiK4vpnicatgIouYTUH4@dpg-d6bhpcpr0fns73e1qr0g-a/citas_db_u5yx', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datos)
-        });
+         const API_URL = "https://gc-10mr.onrender.com";
+
+         const response = await fetch(`${API_URL}/api/register`, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(datos)
+    });
         if (res.ok) {
             alert("¡Cuenta creada!");
             toggleForms();
