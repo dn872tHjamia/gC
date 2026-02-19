@@ -38,32 +38,36 @@ function toggleForms() {
         regF.style.display = "flex";
     }
 }
+// ... (Tus funciones de seguimiento de ojos y toggleForms se quedan igual)
 
-// 4. Evento Login
+// 4. Evento Login CORREGIDO
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = passwordField.value;
 
     try {
-        const response = await fetch('postgresql://citas_db_sq82_user:e1OupKLEhR1isHn5gezXyeXmEFzhEJfv@dpg-d6bi2tgboq4c73fls42g-a/citas_db_sq82', {
+        // CAMBIO: Ahora apunta a tu servidor de Render, no a la DB directamente
+        const response = await fetch('https://gc-10mr.onrender.com/login', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
+        
         const data = await response.json();
-        if (data.success) {
+        if (response.ok) { // Cambiado de data.success a response.ok para mayor seguridad
             localStorage.setItem('userId', data.userId);
-            window.location.href = data.redirect;
+            window.location.href = "dashboard.html"; // Asegúrate de que este archivo exista
         } else {
-            alert(data.error);
+            alert(data.error || "Error al iniciar sesión");
         }
     } catch (error) {
         console.error("Error:", error);
+        alert("No se pudo conectar con el servidor");
     }
 });
 
-// 5. Evento Registro
+// 5. Evento Registro CORREGIDO
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const datos = {
@@ -74,18 +78,25 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     };
 
     try {
-         const API_URL = "https://gc-10mr.onrender.com";
+        const API_URL = "https://gc-10mr.onrender.com";
 
-         const response = await fetch(`${API_URL}/api/register`, {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify(datos)
-    });
-        if (res.ok) {
-            alert("¡Cuenta creada!");
+        // IMPORTANTE: Quité el "/api" porque tu servidor dio error 404 antes
+        const response = await fetch(`${API_URL}/register`, { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
+
+        // CORRECCIÓN: Usar 'response' en lugar de 'res'
+        if (response.ok) { 
+            alert("¡Cuenta creada con éxito!");
             toggleForms();
+        } else {
+            const errorData = await response.json();
+            alert("Error: " + errorData.message);
         }
     } catch (err) {
         console.error("Error:", err);
+        alert("Error de conexión");
     }
 });
