@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Negocio - Administración</title>
+    <link rel="stylesheet" href="style-dash.css">
+</head>
+<body>
+    <header>
+        <h1>Panel de Administración</h1>
+        <button onclick="cerrarSesion()">Salir</button>
+    </header>
+
+    <main class="admin-container">
+        <section class="config-section">
+            <h2>Configurar mi Negocio</h2>
+            <form id="businessConfig">
+                <input type="text" id="bizName" placeholder="Nombre del Negocio" required>
+                <select id="bizCategory">
+                    <option value="Barbería">Barbería</option>
+                    <option value="Dentista">Dentista</option>
+                    <option value="Consultorio">Consultorio</option>
+                </select>
+                <input type="text" id="bizImg" placeholder="URL de la Imagen (Logo)">
+                
+                <div class="schedule-config">
+                    <h3>Horarios de Atención</h3>
+                    <label>Hora Apertura: <input type="time" id="openTime" value="09:00"></label>
+                    <label>Hora Cierre: <input type="time" id="closeTime" value="18:00"></label>
+                    <label>Intervalo (min): <input type="number" id="interval" value="30"></label>
+                </div>
+                
+                <button type="submit" class="btn-save">Actualizar Datos</button>
+            </form>
+        </section>
+
+        <section class="appointments-section">
+            <h2>Citas Agendadas</h2>
+            <div id="adminAppointmentsList">
+                </div>
+        </section>
+    </main>
+
+    <script src="negocio.js"></script>
+</body>
+</html>
