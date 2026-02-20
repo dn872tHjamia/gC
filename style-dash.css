@@ -1,44 +1,70 @@
-body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; }
-header { background: #2563eb; color: white; padding: 20px; display: flex; justify-content: space-between; }
+/* 1. ESTILOS BASE */
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; color: #333; }
+header { background: #2563eb; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
+/* 2. NAVEGACIÓN Y TABS (Para historial y exploración) */
+.tabs { display: flex; gap: 10px; padding: 20px 30px; background: white; border-bottom: 1px solid #ddd; }
+.filter-btn { 
+    padding: 10px 20px; border: none; border-radius: 20px; background: #e5e7eb; 
+    cursor: pointer; transition: 0.3s; font-weight: 600; 
+}
+.filter-btn.active { background: #2563eb; color: white; }
+.hidden { display: none !important; }
+
+/* 3. GRID DE NEGOCIOS Y TARJETAS */
 .business-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px; padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px; padding: 25px;
 }
 
 .card {
-    background: white; border-radius: 12px; overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer;
-    transition: transform 0.2s;
+    background: white; border-radius: 15px; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
-.card:hover { transform: translateY(-5px); }
-.card img { width: 100%; height: 150px; object-fit: cover; }
-.card-info { padding: 15px; }
+.card:hover { transform: translateY(-8px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
 
-/* Estilos de los Slots de Citas */
-.slots-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+/* Ajuste para Logos .webp */
+.business-logo { width: 100%; height: 180px; object-fit: cover; background: #eee; }
+.card-info { padding: 20px; }
+.card-info h3 { margin: 0 0 10px 0; font-size: 1.2rem; color: #1e40af; }
+.card-info span { color: #6b7280; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+
+/* 4. MODAL Y AGENDADO */
+.modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
+.modal-content { background: white; margin: 5% auto; padding: 30px; width: 90%; max-width: 550px; border-radius: 15px; position: relative; }
+.close { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #999; }
+
+.slots-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-top: 20px; }
 .slot {
-    padding: 10px 15px; border-radius: 5px; color: white;
-    font-weight: bold; cursor: pointer;
+    padding: 12px; border-radius: 8px; color: white; text-align: center;
+    font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.9rem;
 }
-.libre { background: #22c55e; } /* VERDE */
-.ocupado { background: #ef4444; cursor: not-allowed; } /* ROJO */
+.libre { background: #22c55e; border: 2px solid #16a34a; }
+.libre:hover { background: #16a34a; scale: 1.05; }
+.ocupado { background: #fca5a5; color: #991b1b; cursor: not-allowed; border: 2px solid #ef4444; opacity: 0.7; }
 
-/* Modal */
-.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-.modal-content { background: white; margin: 10% auto; padding: 20px; width: 80%; max-width: 500px; border-radius: 10px; }
-
-.admin-container { display: flex; flex-wrap: wrap; gap: 30px; padding: 20px; }
+/* 5. PANEL DE ADMINISTRACIÓN (NEGOCIOS) */
+.admin-container { display: flex; flex-wrap: wrap; gap: 30px; padding: 30px; max-width: 1200px; margin: auto; }
 .config-section, .appointments-section { 
-    flex: 1; min-width: 300px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+    flex: 1; min-width: 350px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
 }
 
+/* Historial de Citas */
 .appointment-card { 
     display: flex; justify-content: space-between; align-items: center; 
-    padding: 10px; border-bottom: 1px solid #eee; 
+    padding: 15px; border-bottom: 1px solid #f3f4f6; margin-bottom: 10px;
 }
+.appointment-card:last-child { border-bottom: none; }
+.status { font-size: 0.8rem; padding: 4px 8px; border-radius: 12px; font-weight: bold; text-transform: uppercase; }
+.status-confirmada { background: #dcfce7; color: #166534; }
+.status-pendiente { background: #fef9c3; color: #854d0e; }
+.status-cancelada { background: #fee2e2; color: #991b1b; }
 
-.btn-save { background: #22c55e; color: white; border: none; padding: 10px; border-radius: 5px; width: 100%; cursor: pointer; }
-.btn-delete { background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; }
-.btn-move { background: #f59e0b; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-left: 5px; }
+/* 6. BOTONES Y FORMULARIOS */
+input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+.btn-save { background: #2563eb; color: white; border: none; padding: 15px; border-radius: 8px; width: 100%; cursor: pointer; font-size: 1rem; font-weight: bold; }
+.btn-save:hover { background: #1d4ed8; }
+.btn-delete { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+.btn-move { background: #f59e0b; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; margin-left: 5px; }

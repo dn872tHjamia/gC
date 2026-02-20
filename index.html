@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Interactivo - Citas Santiago Tuxtla</title>
+    <title>Zenda - Login Interactivo</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilo para mostrar errores de validación rápidamente */
+        .password-hint { font-size: 0.75rem; color: #666; margin-top: -10px; margin-bottom: 10px; }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
     <div class="login-container">
@@ -33,12 +38,18 @@
                     <h2>Crear Cuenta</h2>
                     <input type="text" id="regName" placeholder="Nombre Completo" required>
                     <input type="email" id="regEmail" placeholder="Correo electrónico" required>
-                    <input type="password" id="regPass" placeholder="Contraseña" required>
+                    
+                    <input type="tel" id="regPhone" placeholder="Teléfono de contacto" required>
+                    
+                    <input type="password" id="regPass" placeholder="Nueva Contraseña" required>
+                    <p class="password-hint">Mínimo 9 caracteres, una mayúscula, un número y un símbolo.</p>
+
                     <label>Tipo de usuario:</label>
                     <select id="regRole">
-                        <option value="cliente">Cliente</option>
-                        <option value="negocio">Dueño de Negocio</option>
+                        <option value="cliente">Cliente (Busco servicios)</option>
+                        <option value="negocio">Dueño de Negocio (Ofrezco servicios)</option>
                     </select>
+                    
                     <button type="submit" class="btn-login">Registrarme</button>
                     <p>¿Ya tienes cuenta? <a href="javascript:void(0)" onclick="toggleForms()">Inicia sesión</a></p>
                 </form>

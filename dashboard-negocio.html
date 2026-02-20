@@ -2,13 +2,20 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Negocio - Administración</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenda - Panel de Administración</title>
     <link rel="stylesheet" href="style-dash.css">
+    <style>
+        .admin-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; }
+        .logo-preview { width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; margin: 10px 0; }
+        .days-config label { display: inline-block; margin-right: 10px; cursor: pointer; }
+        .social-inputs input { margin-bottom: 5px; width: 100%; }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Panel de Administración</h1>
-        <button onclick="cerrarSesion()">Salir</button>
+        <h1>Panel de Administración - Zenda</h1>
+        <button onclick="cerrarSesion()">Cerrar Sesión</button>
     </header>
 
     <main class="admin-container">
@@ -16,31 +23,83 @@
             <h2>Configurar mi Negocio</h2>
             <form id="businessConfig">
                 <input type="text" id="bizName" placeholder="Nombre del Negocio" required>
+                <input type="tel" id="bizPhone" placeholder="Teléfono de contacto" required>
+                
                 <select id="bizCategory">
                     <option value="Barbería">Barbería</option>
                     <option value="Dentista">Dentista</option>
                     <option value="Consultorio">Consultorio</option>
+                    <option value="Veterinaria">Veterinaria</option>
+                    <option value="Estética">Estética</option>
                 </select>
-                <input type="text" id="bizImg" placeholder="URL de la Imagen (Logo)">
-                
-                <div class="schedule-config">
-                    <h3>Horarios de Atención</h3>
-                    <label>Hora Apertura: <input type="time" id="openTime" value="09:00"></label>
-                    <label>Hora Cierre: <input type="time" id="closeTime" value="18:00"></label>
-                    <label>Intervalo (min): <input type="number" id="interval" value="30"></label>
+
+                <div class="logo-section">
+                    <label>Logo del Negocio (Formato .webp, Máx 2MB):</label>
+                    <input type="file" id="bizLogo" accept="image/webp" onchange="previewImage(this)">
+                    <img id="logoPreview" class="logo-preview" src="" alt="Vista previa" onerror="this.src='https://via.placeholder.com/100'">
+                </div>
+
+                <div class="social-inputs">
+                    <h3>Redes Sociales (Opcional)</h3>
+                    <input type="url" id="fbLink" placeholder="Enlace de Facebook">
+                    <input type="url" id="igLink" placeholder="Enlace de Instagram">
                 </div>
                 
-                <button type="submit" class="btn-save">Actualizar Datos</button>
+                <div class="schedule-config">
+                    <h3>Horarios y Disponibilidad</h3>
+                    <div class="days-config">
+                        <label><input type="checkbox" name="days" value="1"> L</label>
+                        <label><input type="checkbox" name="days" value="2"> M</label>
+                        <label><input type="checkbox" name="days" value="3"> M</label>
+                        <label><input type="checkbox" name="days" value="4"> J</label>
+                        <label><input type="checkbox" name="days" value="5"> V</label>
+                        <label><input type="checkbox" name="days" value="6"> S</label>
+                        <label><input type="checkbox" name="days" value="0"> D</label>
+                    </div>
+                    
+                    <label>Apertura: <input type="time" id="openTime" value="09:00"></label>
+                    <label>Cierre: <input type="time" id="closeTime" value="18:00"></label>
+                    <label>Duración Servicio (min): <input type="number" id="interval" value="30" min="15"></label>
+                </div>
+                
+                <button type="submit" class="btn-save">Guardar Cambios</button>
             </form>
         </section>
 
         <section class="appointments-section">
-            <h2>Citas Agendadas</h2>
+            <h2>Gestión de Citas (Historial)</h2>
             <div id="adminAppointmentsList">
-                </div>
+                <p>Cargando citas...</p>
+            </div>
         </section>
     </main>
 
+    <script>
+        // Validación de Imagen .webp y 2MB
+        function previewImage(input) {
+            const file = input.files[0];
+            if (file) {
+                if (file.type !== "image/webp") {
+                    alert("Solo se permiten archivos .webp");
+                    input.value = "";
+                    return;
+                }
+                if (file.size > 2 * 1024 * 1024) {
+                    alert("El archivo no debe pesar más de 2MB");
+                    input.value = "";
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => document.getElementById('logoPreview').src = e.target.result;
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function cerrarSesion() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
     <script src="negocio.js"></script>
 </body>
 </html>

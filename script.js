@@ -1,13 +1,13 @@
+// 1. CONFIGURACIÓN Y SELECTORES
+const API_URL = "https://gc-10mr.onrender.com";
 const pupils = document.querySelectorAll('.pupil');
 const shapes = document.querySelectorAll('.shape');
 const passwordField = document.querySelector('#passwordField');
 const regPass = document.querySelector('#regPass');
 
-// 1. Seguimiento del Mouse
+// 2. LÓGICA VISUAL (Seguimiento del Mouse)
 document.addEventListener('mousemove', (e) => {
-    // Si estamos escribiendo en cualquier campo de password, no seguir
     if (document.activeElement.type === 'password') return;
-
     pupils.forEach(pupil => {
         const rect = pupil.getBoundingClientRect();
         const eyeX = rect.left + rect.width / 2;
@@ -19,84 +19,87 @@ document.addEventListener('mousemove', (e) => {
     });
 });
 
-// 2. Girar ojos al escribir contraseña
 [passwordField, regPass].forEach(field => {
     field.addEventListener('focus', () => shapes.forEach(s => s.classList.add('shame')));
     field.addEventListener('blur', () => shapes.forEach(s => s.classList.remove('shame')));
 });
 
-// 3. Función para cambiar entre formularios
 function toggleForms() {
     const loginF = document.getElementById('loginForm');
     const regF = document.getElementById('registerForm');
-    
-    if (loginF.style.display === "none") {
-        loginF.style.display = "flex";
-        regF.style.display = "none";
-    } else {
-        loginF.style.display = "none";
-        regF.style.display = "flex";
-    }
+    const isLoginVisible = loginF.style.display !== "none";
+    loginF.style.display = isLoginVisible ? "none" : "flex";
+    regF.style.display = isLoginVisible ? "flex" : "none";
 }
-// ... (Tus funciones de seguimiento de ojos y toggleForms se quedan igual)
 
-// 4. Evento Login CORREGIDO
+// 3. VALIDACIÓN DE CONTRASEÑA (9+ caracteres, Mayúscula, Número, Símbolo)
+function validarPassword(pass) {
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{9,}$/;
+    return regex.test(pass);
+}
+
+// 4. EVENTO LOGIN
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = passwordField.value;
 
     try {
-        // CAMBIO: Ahora apunta a tu servidor de Render, no a la DB directamente
-        const response = await fetch('https://gc-10mr.onrender.com/login', { 
+        const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
         
         const data = await response.json();
-        if (response.ok) { // Cambiado de data.success a response.ok para mayor seguridad
+        if (response.ok) {
             localStorage.setItem('userId', data.userId);
-            window.location.href = "dashboard.html"; // Asegúrate de que este archivo exista
+            localStorage.setItem('userRole', data.rol);
+            // Redirección según rol registrado en DB
+            window.location.href = data.rol === 'negocio' ? "dashboard-negocio.html" : "dashboard-cliente.html";
         } else {
-            alert(data.error || "Error al iniciar sesión");
+            alert(data.error || "Credenciales incorrectas");
         }
     } catch (error) {
-        console.error("Error:", error);
-        alert("No se pudo conectar con el servidor");
+        console.error("Error de conexión:", error);
+        alert("Error de conexión con el servidor de Render");
     }
 });
 
-// 5. Evento Registro CORREGIDO
+// 5. EVENTO REGISTRO (Incluye campo de teléfono)
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const passValue = regPass.value;
+
+    if (!validarPassword(passValue)) {
+        alert("La contraseña debe tener: Al menos 9 caracteres, una mayúscula, un número y un carácter especial.");
+        return;
+    }
+
     const datos = {
         nombre: document.getElementById('regName').value,
         email: document.getElementById('regEmail').value,
-        password: document.getElementById('regPass').value,
+        telefono: document.getElementById('regPhone').value, // Nuevo campo
+        password: passValue,
         rol: document.getElementById('regRole').value
     };
 
     try {
-        const API_URL = "https://gc-10mr.onrender.com";
-
-        // IMPORTANTE: Quité el "/api" porque tu servidor dio error 404 antes
         const response = await fetch(`${API_URL}/register`, { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
 
-        // CORRECCIÓN: Usar 'response' en lugar de 'res'
-        if (response.ok) { 
-            alert("¡Cuenta creada con éxito!");
+        const data = await response.json();
+        if (response.ok) {
+            alert("¡Cuenta creada con éxito! Ya puedes iniciar sesión.");
             toggleForms();
         } else {
-            const errorData = await response.json();
-            alert("Error: " + errorData.message);
+            alert(data.error || "Error al registrar usuario");
         }
     } catch (err) {
-        console.error("Error:", err);
-        alert("Error de conexión");
+        console.error("Error de red:", err);
+        alert("No se pudo conectar con el servidor de Render");
     }
 });
